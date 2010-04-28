@@ -1,0 +1,7 @@
+This is "Cool Stuff in PostgreSQL 9", a talk I originally gave with Selena Deckelmann at LFNW2010.
+
+It's in LaTeX - you can make a .pdf by running the Makefile against the .tex file.
+
+Then run "make clean" to get rid of the extra docs you don't need.
+
+Or, you can just read the .pdf itself.  I'm still learning beamer, so the layout's not perfect.
