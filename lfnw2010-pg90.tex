@@ -1,0 +1,450 @@
+\documentclass{beamer}
+
+% Colors to set everyone white on black.
+\setbeamercolor{item}{fg=white,bg=black}
+\setbeamercolor{normal text}{fg=white,bg=black}
+\setbeamercolor{titlelike}{fg=white,bg=black}
+\usepackage{ulem}
+
+% Title page starts here.
+\title{PostgreSQL 9.0}
+\subtitle{KEWL STUFF U CAN DO}
+\author{Mark Wong\\markwkm@gmail.com}
+\institute{LinuxFest Northwest 2010}
+\date{April 24 - 25, 2010}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\frame
+{
+    \begin{center}
+    \sout{Mark Wong\\markwkm@gmail.com}
+
+    \mbox{}
+
+    Gabrielle Roth\\gorthx@gmail.com
+
+    \mbox{}
+
+    Selena Deckelmann\\selenamarie@gmail.com
+    \end{center}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Introductions}
+
+  \color{cyan}
+  \begin{verbatim}
+          __     __
+         /  \~~~/  \  . o O ( PostgreSQL? )
+   ,----(     oo    )
+  /      \__     __/
+ /|         (\  |(
+^ \   /___\  /\ |
+   |__|   |__|-"
+  \end{verbatim}
+}
+\frame
+{
+  \frametitle{PostgreSQL}
+
+  \begin{itemize}
+  \item[-] Current version 8.4.3
+  \item[-] 9.0 is in alpha
+  \item[-] Get it here:\\
+  http://www.postgresql.org/ftp/source/9.0alpha4/\\
+  http://www.postgresql.org/developer/alpha
+  \end{itemize}
+}
+
+\frame
+{
+  \frametitle{Contents}
+
+  Full list of features:\\
+  http://developer.postgresql.org/pgdocs/postgres/\\
+  release-9-0.html
+}
+
+%%%%%%%%%%%%%%% 
+\frame
+{
+  \frametitle{Install server-side language PL/pgSQL by default (Bruce Momjian)}
+  \begin{center}
+  Yes.
+  \end{center}
+}
+
+\frame
+{
+  \frametitle{Allow function calls to supply parameter names and match them to named parameters in the function definition (Pavel Stehule)}
+
+(Demo.)
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Add support for to\_char() scientific notation output ('EEEE') (Pavel Stehule, Brendan Jurd)}
+  \begin{verbatim}
+postgres=# create table exponents_demo
+(example numeric);
+CREATE TABLE
+postgres=# INSERT INTO exponents_demo
+VALUES
+  ('10000000'),
+  ('2.54'),
+  ('3.1415'),
+  ('666'),
+  ('6.02e+23'),
+  ('5.29e-11'),
+  ('8675309')
+;
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Con't}
+  \begin{verbatim}
+postgres=# SELECT * from exponents_demo ;
+       example 
+--------------------------
+                 10000000
+                     2.54
+                   3.1415
+                      666
+ 602000000000000000000000
+          0.0000000000529
+                  8675309
+(7 rows)
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Con't}
+  \begin{verbatim}
+postgres=# SELECT to_char(example, '9.9EEEE')
+AS lookyhere
+FROM exponents_demo ;
+ lookyhere
+-----------
+  1.0e+07
+  2.5e+00
+  3.1e+00
+  6.7e+02
+  6.0e+23
+  5.3e-11
+  8.7e+06
+(7 rows)
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{RADIUS Authentication (Magnus Hagander)}
+  \begin{verbatim}
+#host  database  user  CIDR-address  auth-method  [auth-options]
+host   all       all   0.0.0.0/0     radius       \
+radiusserver=1.2.3.4 radiussecret=canttouchthis \
+radiusport=1234  radiusidentifier=gabscooldatabase
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Add samehost and samenet designations to pg\_hba.conf (Stef Walter)}
+  \begin{verbatim}
+# IPv4 local connections:
+host all  all             127.0.0.1/32            md5
+host all  all             samehost                md5
+host all  all             samenet                 md5
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Log changed parameter values when postgresql.conf is reloaded (Peter Eisentraut)}
+  \begin{verbatim}
+LOG:  parameter "log_rotation_age" changed to "7d"
+LOG:  parameter "port" cannot be changed without restarting the server
+LOG:  parameter "log_rotation_age" changed to "1d"
+LOG:  parameter "log_min_messages" changed to "notice"
+LOG:  parameter "autovacuum" changed to "off"
+<2010-04-22 14:00:50 PDT  >LOG:  parameter "log_line_prefix" changed to "<%t %d %u>"
+<2010-04-22 14:00:50 PDT  >LOG:  parameter "log_statement" changed to "mod"
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Add an SQL state option (\%e) to log\_line\_prefix (Guillaume Smet)}
+  e.g.:
+  \begin{verbatim}
+log_line_prefix = '<%t %d %u %e>'
+  \end{verbatim}
+  gives you something like:
+  \begin{verbatim}
+<2010-04-22 21:02:02 PDT postgres postgres 00000> \
+ LOG:  statement: ALTER TABLE drop_column_demo DROP COLUMN IF EXISTS b;
+<2010-04-22 21:02:54 PDT postgres postgres 00000> \
+ LOG:  statement: GRANT SELECT on drop_column_demo to groth;
+<2010-04-22 21:02:54 PDT postgres postgres 42704> \
+ ERROR:  role "groth" does not exist
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Allow EXPLAIN output in XML, JSON, and YAML formats
+              (Robert Haas, Greg Sabino Mullane)}
+
+  \begin{verbatim}
+EXPLAIN 
+SELECT * FROM user_history ORDER BY "timestamp";
+QUERY PLAN                                 
+---------------------------------------------------------------------------
+ Sort  (cost=18494.32..18852.33 rows=143204 width=34)
+   Sort Key: "timestamp"
+   ->  Seq Scan on user_history  (cost=0.00..2559.04 rows=143204 width=34)
+(3 rows)
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Con't}
+
+  \begin{verbatim}
+EXPLAIN (FORMAT XML)
+SELECT * FROM user_history ORDER BY "timestamp";
+QUERY PLAN                         
+------------------------------------------------------------
+<explain xmlns="http://www.postgresql.org/2009/explain">  +
+  <Query>                                                 +
+    <Plan>                                                +
+      <Node-Type>Sort</Node-Type>                         +
+      <Startup-Cost>18494.32</Startup-Cost>               +
+      <Total-Cost>18852.33</Total-Cost>                   +
+      <Plan-Rows>143204</Plan-Rows>                       +
+      <Plan-Width>34</Plan-Width>                         +
+      <Sort-Key>                                          +
+        <Item>"timestamp"</Item>                          +
+      </Sort-Key>                                         +
+...
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Con't}
+  \begin{verbatim}
+...
+      <Plans>                                             +
+        <Plan>                                            +
+          <Node-Type>Seq Scan</Node-Type>                 +
+          <Parent-Relationship>Outer</Parent-Relationship>+
+          <Relation-Name>user_history</Relation-Name>     +
+          <Alias>user_history</Alias>                     +
+          <Startup-Cost>0.00</Startup-Cost>               +
+          <Total-Cost>2559.04</Total-Cost>                +
+          <Plan-Rows>143204</Plan-Rows>                   +
+          <Plan-Width>34</Plan-Width>                     +
+        </Plan>                                           +
+      </Plans>                                            +
+    </Plan>                                               +
+  </Query>                                                +
+</explain>
+(1 row)
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Con't}
+  \begin{verbatim}
+EXPLAIN (FORMAT YAML)
+SELECT * FROM user_history ORDER BY "timestamp";
+QUERY PLAN              
+-------------------------------------
+ - Plan:                            +
+     Node Type: Sort                +
+     Startup Cost: 18494.32         +
+     Total Cost: 18852.33           +
+     Plan Rows: 143204              +
+     Plan Width: 34                 +
+     Sort Key:                      +
+       - "\"timestamp\""            +
+...
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Con't}
+  \begin{verbatim}
+     Plans:                         +
+       - Node Type: Seq Scan        +
+         Parent Relationship: Outer +
+         Relation Name: user_history+
+         Alias: user_history        +
+         Startup Cost: 0.00         +
+         Total Cost: 2559.04        +
+         Plan Rows: 143204          +
+         Plan Width: 34
+(1 row)
+  \end{verbatim}
+}
+
+%%%%%%%%%%%%%%% End Gab's section
+
+\frame[containsverbatim]
+{
+  \frametitle{Speed up CREATE DATABASE by deferring flushes to disk (Andres Freund, Greg Stark)}
+(Demo.)
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Add WHERE clause to CREATE TRIGGER to allow control over
+              whether a trigger is fired (Takahiro Itagaki)}
+psst\ldots It's actually a "When" clause\ldots
+  \begin{verbatim}
+CREATE TRIGGER name { BEFORE | AFTER } { event [ OR ... ] }
+    ON table [ FOR [ EACH ] { ROW | STATEMENT } ]
+    [ WHEN ( condition ) ]
+    EXECUTE PROCEDURE function_name ( arguments )
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Allow NOTIFY to pass an optional string to listeners
+              (Joachim Wieland)}
+
+  \begin{verbatim}
+lfnw-9.0=# LISTEN l9_0;
+LISTEN
+lfnw-9.0=# NOTIFY l9_0, 'need coffee...';
+NOTIFY
+Asynchronous notification "l9_0"
+with payload "need coffee..."
+received from server process with PID 10480.
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Have columns defined with storage type MAIN 
+  remain on the main heap page unless it cannot fit (Kevin Grittner)}
+  \begin{verbatim}
+8k page size
+Before: a tuple might get TOAST'd prematurely
+LIVE DEMO!
+  \end{verbatim}
+}
+
+\frame
+{
+  \frametitle{Add pg\_stat\_reset\_single\_table\_counters() 
+  and pg\_stat\_reset\_single\_function\_counters() 
+  to allow the resetting of statistics counters for 
+  individual tables and indexes (Magnus Hagander)}
+
+  (Discuss.)
+}
+
+\frame
+{
+  \frametitle{Add pg\_last\_xlog\_receive\_location() 
+  and pg\_last\_xlog\_replay\_location(), which can be used to monitor 
+  standby server WAL activity (Simon, Fujii Masao, Heikki)}
+
+  (Discuss.)
+}
+
+\frame
+{
+  \frametitle{Hot Standby/Streaming Replication}
+
+  \ldots drumroll \ldots
+}
+
+\frame
+{
+  \frametitle{And now for something completely different...}
+
+  \begin{center}
+  Pg Android App Contest!
+  \end{center}
+  \url{http://wiki.postgresql.org/wiki/AndroidAppContest}
+}
+
+\frame
+{
+  \frametitle{Odds \& Ends}
+  \begin{itemize}
+  \item[] vacuumdb --analyze-only (Bruce Momjian)
+  \item[] GRANT/REVOKE IN SCHEMA (Petr Jelinek)
+  \item[] pg\_table\_size and pg\_indexes\_size (Bernd Helmle)
+  \item[] Add deferrable unique constraints (Dean Rasheed)
+  \item[] Remove the use of flat files for system table bootstrapping (Tom, Alvaro)
+  \item[] DROP COLUMN IF EXISTS (Andreas Freund)
+  \item[] 64-bit Windows support (Tsutomu Yamada, Magnus Hagander)
+  \item[] Improvements to PL/Perl (Tim Bunce)
+  \item[] Anonymous functions with 'DO' (Petr Jelinek, Joshua Tolley, Hannu Valtonen)
+  \item[] /contrib/passwordcheck (Laurenz Albe)
+  \end{itemize}
+}
+
+\frame
+{
+  \frametitle{Final Notes}
+
+  These slides:\\
+  \begin{itemize}
+  \item[] \url{http://www.slideshare.net/markwkm}
+  \end{itemize}
+
+  Try it!\\
+  \begin{itemize}
+  \item[] \url{http://www.postgresql.org/ftp/source/9.0alpha4/}
+  \item[] \url{http://www.postgresql.org/developer/alpha}
+  \item[] \url{http://wiki.postgresql.org/wiki/HowToBetaTest}
+  \end{itemize}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Acknowledgements}
+
+  Post-it Extra-Sticky Notes\\
+  Hayley Jane Wakenshaw\\
+  \color{cyan}
+  \begin{verbatim}
+          __     __
+         /  \~~~/  \  . o O ( Thank you! )
+   ,----(     oo    )
+  /      \__     __/
+ /|         (\  |(
+^ \   /___\  /\ |
+   |__|   |__|-"
+  \end{verbatim}
+
+}
+
+\frame
+{
+  \frametitle{License}
+
+  This work is licensed under a Creative Commons Attribution 3.0
+  Unported License. To view a copy of this license, (a) visit
+  \url{http://creativecommons.org/licenses/by/3.0/us/}; or, (b) send a
+  letter to Creative Commons, 171 2nd Street, Suite 300, San Francisco,
+  California, 94105, USA.
+}
+
+\end{document}

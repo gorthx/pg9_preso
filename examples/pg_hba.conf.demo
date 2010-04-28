@@ -1,0 +1,21 @@
+# PostgreSQL Client Authentication Configuration File
+# ===================================================
+#
+# local      DATABASE  USER  METHOD  [OPTIONS]
+# host       DATABASE  USER  CIDR-ADDRESS  METHOD  [OPTIONS]
+# hostssl    DATABASE  USER  CIDR-ADDRESS  METHOD  [OPTIONS]
+# hostnossl  DATABASE  USER  CIDR-ADDRESS  METHOD  [OPTIONS]
+#
+
+# TYPE  DATABASE        USER            CIDR-ADDRESS            METHOD
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     trust
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            trust
+# radius authentication
+host    all             all             0.0.0.0/0               radius \
+radiusserver=1.2.3.4 radiussecret=canttouchthis radiusport=1234  radiusidentifier=gabscooldatabase
+# samehost/samenet
+host    all             all             samehost                trust
+host    all             all             samenet                 trust
