@@ -9,28 +9,13 @@
 % Title page starts here.
 \title{PostgreSQL 9.0}
 \subtitle{KEWL STUFF U CAN DO}
-\author{Mark Wong\\markwkm@gmail.com}
-\institute{LinuxFest Northwest 2010}
-\date{April 24 - 25, 2010}
+\author{Mark Wong - markwkm@gmail.com\\Gabrielle Roth - gorthx@gmail.com}
+\institute{PDXPUG}
+\date{June 17, 2010}
 
 \begin{document}
 
 \frame{\titlepage}
-
-\frame
-{
-    \begin{center}
-    \sout{Mark Wong\\markwkm@gmail.com}
-
-    \mbox{}
-
-    Gabrielle Roth\\gorthx@gmail.com
-
-    \mbox{}
-
-    Selena Deckelmann\\selenamarie@gmail.com
-    \end{center}
-}
 
 \frame[containsverbatim]
 {
@@ -52,24 +37,32 @@
   \frametitle{PostgreSQL}
 
   \begin{itemize}
-  \item[-] Current version 8.4.3
-  \item[-] 9.0 is in alpha
+  \item[-] Current version 8.4.4
+  \item[-] 9.0 is in beta2
   \item[-] Get it here:\\
-  http://www.postgresql.org/ftp/source/9.0alpha4/\\
-  http://www.postgresql.org/developer/alpha
+  http://www.postgresql.org/developer/beta\\
+  http://www.postgresql.org/ftp/source/v9.0beta2/
   \end{itemize}
 }
 
 \frame
 {
-  \frametitle{Contents}
+  \frametitle{contents}
 
-  Full list of features:\\
+  full list of features:\\
   http://developer.postgresql.org/pgdocs/postgres/\\
   release-9-0.html
 }
 
-%%%%%%%%%%%%%%% 
+\frame
+{
+  \begin{center}
+  \huge{Gab's Top}
+  \sout{10}
+  \huge{11}
+  \end{center}
+}
+
 \frame
 {
   \frametitle{Install server-side language PL/pgSQL by default (Bruce Momjian)}
@@ -80,67 +73,33 @@
 
 \frame
 {
+  \frametitle{pg\_table\_size and pg\_indexes\_size (Bernd Helmle)}
+  \begin{center}
+  Discuss.
+  \end{center}
+}
+
+\frame
+{
+  \frametitle{vacuumdb --analyze-only (Bruce Momjian)}
+  \begin{center}
+  Hint:  You won't get any output.
+  \end{center}
+}
+
+\frame
+{
   \frametitle{Allow function calls to supply parameter names and match them to named parameters in the function definition (Pavel Stehule)}
 
 (Demo.)
 }
 
-\frame[containsverbatim]
+\frame
 {
-  \frametitle{Add support for to\_char() scientific notation output ('EEEE') (Pavel Stehule, Brendan Jurd)}
-  \begin{verbatim}
-postgres=# create table exponents_demo
-(example numeric);
-CREATE TABLE
-postgres=# INSERT INTO exponents_demo
-VALUES
-  ('10000000'),
-  ('2.54'),
-  ('3.1415'),
-  ('666'),
-  ('6.02e+23'),
-  ('5.29e-11'),
-  ('8675309')
-;
-  \end{verbatim}
-}
-
-\frame[containsverbatim]
-{
-  \frametitle{Con't}
-  \begin{verbatim}
-postgres=# SELECT * from exponents_demo ;
-       example 
---------------------------
-                 10000000
-                     2.54
-                   3.1415
-                      666
- 602000000000000000000000
-          0.0000000000529
-                  8675309
-(7 rows)
-  \end{verbatim}
-}
-
-\frame[containsverbatim]
-{
-  \frametitle{Con't}
-  \begin{verbatim}
-postgres=# SELECT to_char(example, '9.9EEEE')
-AS lookyhere
-FROM exponents_demo ;
- lookyhere
------------
-  1.0e+07
-  2.5e+00
-  3.1e+00
-  6.7e+02
-  6.0e+23
-  5.3e-11
-  8.7e+06
-(7 rows)
-  \end{verbatim}
+  \frametitle{/contrib/passwordcheck (Laurenz Albe)}
+  \begin{center}
+  Discuss.
+  \end{center}
 }
 
 \frame[containsverbatim]
@@ -299,7 +258,70 @@ QUERY PLAN
   \end{verbatim}
 }
 
-%%%%%%%%%%%%%%% End Gab's section
+\frame[containsverbatim]
+{
+  \frametitle{Add support for to\_char() scientific notation output ('EEEE') (Pavel Stehule, Brendan Jurd)}
+  \begin{verbatim}
+postgres=# create table exponents_demo
+(example numeric);
+CREATE TABLE
+postgres=# INSERT INTO exponents_demo
+VALUES
+  ('10000000'),
+  ('2.54'),
+  ('3.1415'),
+  ('666'),
+  ('6.02e+23'),
+  ('5.29e-11'),
+  ('8675309')
+;
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Con't}
+  \begin{verbatim}
+postgres=# SELECT * from exponents_demo ;
+       example 
+--------------------------
+                 10000000
+                     2.54
+                   3.1415
+                      666
+ 602000000000000000000000
+          0.0000000000529
+                  8675309
+(7 rows)
+  \end{verbatim}
+}
+
+\frame[containsverbatim]
+{
+  \frametitle{Con't}
+  \begin{verbatim}
+postgres=# SELECT to_char(example, '9.9EEEE')
+AS lookyhere
+FROM exponents_demo ;
+ lookyhere
+-----------
+  1.0e+07
+  2.5e+00
+  3.1e+00
+  6.7e+02
+  6.0e+23
+  5.3e-11
+  8.7e+06
+(7 rows)
+  \end{verbatim}
+}
+
+\frame
+{
+  \begin{center}
+  \huge{Selena's picks}
+  \end{center}
+}
 
 \frame[containsverbatim]
 {
@@ -387,16 +409,13 @@ LIVE DEMO!
 {
   \frametitle{Odds \& Ends}
   \begin{itemize}
-  \item[] vacuumdb --analyze-only (Bruce Momjian)
   \item[] GRANT/REVOKE IN SCHEMA (Petr Jelinek)
-  \item[] pg\_table\_size and pg\_indexes\_size (Bernd Helmle)
   \item[] Add deferrable unique constraints (Dean Rasheed)
   \item[] Remove the use of flat files for system table bootstrapping (Tom, Alvaro)
   \item[] DROP COLUMN IF EXISTS (Andreas Freund)
   \item[] 64-bit Windows support (Tsutomu Yamada, Magnus Hagander)
   \item[] Improvements to PL/Perl (Tim Bunce)
   \item[] Anonymous functions with 'DO' (Petr Jelinek, Joshua Tolley, Hannu Valtonen)
-  \item[] /contrib/passwordcheck (Laurenz Albe)
   \end{itemize}
 }
 
@@ -407,12 +426,13 @@ LIVE DEMO!
   These slides:\\
   \begin{itemize}
   \item[] \url{http://www.slideshare.net/markwkm}
+  \item[] \url{http://github.com/gorthx/pg9\_preso}
   \end{itemize}
 
   Try it!\\
   \begin{itemize}
-  \item[] \url{http://www.postgresql.org/ftp/source/9.0alpha4/}
-  \item[] \url{http://www.postgresql.org/developer/alpha}
+  \item[] \url{http://www.postgresql.org/developer/beta}
+  \item[] \url{http://www.postgresql.org/ftp/source/v9.0beta2/}
   \item[] \url{http://wiki.postgresql.org/wiki/HowToBetaTest}
   \end{itemize}
 }
