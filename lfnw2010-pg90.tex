@@ -1,34 +1,22 @@
 \documentclass{beamer}
 
-\definecolor{pgdarkblue}{HTML}{0064a5}
-\definecolor{pgbaseblue}{HTML}{336791}
-\definecolor{pglightblue}{HTML}{008bb9}
+\usetheme{postgres}
+\setbeamertemplate{items}[circle]
 
-\definecolor{pgdarkgrey}{HTML}{848484}
-\definecolor{pgbasegrey}{HTML}{666666}
-\definecolor{pglightgrey}{HTML}{585858}
-
-\definecolor{pgdarkorange}{HTML}{cc3b03}
-\definecolor{pgbaseorange}{HTML}{d24b03}
-% Don't know why the HTML code causes latex to error.
-%\definecolor{pglightorange}{HTML}{f26522}
-\definecolor{pglightorange}{RGB}{242,101,34}
-
-\setbeamercolor{item}{fg=white,bg=pgdarkblue}
-\setbeamercolor{normal text}{fg=white,bg=pgdarkblue}
-\setbeamercolor{titlelike}{fg=white,bg=pgdarkblue}
 \usepackage{ulem}
 
 % Title page starts here.
 \title{PostgreSQL 9.0}
 \subtitle{KEWL STUFF U CAN DO}
-\author{Mark Wong - markwkm@gmail.com\\Gabrielle Roth - gorthx@gmail.com}
+\author[markwkm gorthx]{Mark Wong - markwkm@gmail.com\\Gabrielle Roth - gorthx@gmail.com}
 \institute{PDXPUG}
 \date{June 17, 2010}
 
 \begin{document}
 
 \frame{\titlepage}
+
+\setbeamertemplate{footline}[postgres body]
 
 \frame[containsverbatim]
 {

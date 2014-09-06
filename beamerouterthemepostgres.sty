@@ -1,0 +1,30 @@
+% Copyright 2010 PostgreSQL Global Development Group
+
+\mode<presentation>
+
+\defbeamertemplate*{footline}{postgres title}
+{
+}
+
+\defbeamertemplate*{footline}{postgres body}
+{
+  % When using the blank footline first, switching to this after the \titlepage
+  % seems to shift this one down.  Do something dirty like shift this up 1cm.
+  \vspace*{-1cm}%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor~~\beamer@ifempty{\insertshortinstitute}{}{(\insertshortinstitute)}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\mode
+<all>

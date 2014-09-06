@@ -6,8 +6,10 @@ all: lfnw2010-pg90.pdf
 %.eps: %.png
 	convert $< $@
 
+# latex needs to be run twice
 lfnw2010-pg90.dvi: lfnw2010-pg90.tex
 	-rm $@
+	latex $<
 	latex $<
 
 %.pdf: %.dvi
